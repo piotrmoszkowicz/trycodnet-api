@@ -19,7 +19,7 @@ class BlockchainWallet
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=35)
+     * @ORM\Column(type="string", length=35, unique=true)
      */
     private $address;
 

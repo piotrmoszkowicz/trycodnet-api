@@ -8,6 +8,7 @@ use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpClient\HttpClient;
 
 // TODO: Move getRepository to the service
 
@@ -48,6 +49,18 @@ final class WalletController extends AbstractFOSRestController {
 
         $entityManager->persist($wallet);
         $entityManager->flush();
+
+        $client = HttpClient::create();
+
+        $response = $client->request('POST', 'http://localhost:3000/wallets', [
+            'query' => [
+                'apiKey' => 'test'
+            ],
+            'body' => [
+                'address' => $request->get('walletAddress'),
+                'webhookUrl' => 'http://localhost:8080/api/transaction'
+            ]
+        ]);
 
         return View::create($wallet, Response::HTTP_CREATED);
     }

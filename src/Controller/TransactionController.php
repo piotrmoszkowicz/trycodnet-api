@@ -26,17 +26,15 @@ final class TransactionController extends AbstractFOSRestController
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        $wallet = $this->getDoctrine()->getRepository(BlockchainWallet::Class)->findOneBy(['address' => $request->get('trackedWalletId')]);
+        $data = json_decode($request->getContent(), true);
+        $request->request->replace(is_array($data) ? $data : array());
+
+        $walletAddress = $request->request->get('trackedWalletId');
+
+        $wallet = $this->getDoctrine()->getRepository(BlockchainWallet::Class)->findOneBy(['address' => $walletAddress]);
         $transactions = $wallet->getBlockchainTransactions();
 
         $transactionId = $request->get('transactionId');
-
-        /* $filteredTransactions = array_filter(
-            $transactions->toArray(),
-            function ($e) use ($transactionId) {
-                return $e->getTransactionId() == $transactionId;
-            }
-        ); */
 
         $criteria = Criteria::create()->where(Criteria::expr()->eq('transaction_id', $transactionId));
 
@@ -46,13 +44,13 @@ final class TransactionController extends AbstractFOSRestController
 
         if (count($filteredTransactions) > 0) {
             $transaction = $filteredTransactions[0];
-            $transaction->setNumOfConfirmations($request->get('numberOfConfirmations'));
-
+            $transaction->setNumOfConfirmations($transaction->getNumOfConfirmations() + 1);
         } else {
             $date = new \DateTime();
             $date->setTimestamp($request->get('date'));
             $transaction = new BlockchainTransaction();
-            $transaction->setAddressTransaction($request->get('otherWalletId'));
+            $transaction->setAddressesOutput($request->get('addressesOutput'));
+            $transaction->setAddressesInput($request->get('addressesInput'));
             $transaction->setAmount($request->get('amount'));
             $transaction->setDate($date);
             $transaction->setTransactionId($request->get('transactionId'));
@@ -64,6 +62,6 @@ final class TransactionController extends AbstractFOSRestController
 
         $entityManager->flush();
 
-        return View::create($filteredTransactions, Response::HTTP_OK);
+        return View::create($transaction, Response::HTTP_OK);
     }
 }

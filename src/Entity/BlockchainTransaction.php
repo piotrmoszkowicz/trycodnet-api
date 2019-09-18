@@ -17,11 +17,6 @@ class BlockchainTransaction
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=35)
-     */
-    private $address_transaction;
-
-    /**
      * @ORM\Column(type="float")
      */
     private $amount;
@@ -52,21 +47,19 @@ class BlockchainTransaction
      */
     private $address_wallet;
 
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $addresses_output = [];
+
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $addresses_input = [];
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getAddressTransaction(): ?string
-    {
-        return $this->address_transaction;
-    }
-
-    public function setAddressTransaction(string $address_transaction): self
-    {
-        $this->address_transaction = $address_transaction;
-
-        return $this;
     }
 
     public function getAmount(): ?float
@@ -137,6 +130,30 @@ class BlockchainTransaction
     public function setAddressWallet(?BlockchainWallet $address_wallet): self
     {
         $this->address_wallet = $address_wallet;
+
+        return $this;
+    }
+
+    public function getAddressesOutput(): ?array
+    {
+        return $this->addresses_output;
+    }
+
+    public function setAddressesOutput(array $addresses_output): self
+    {
+        $this->addresses_output = $addresses_output;
+
+        return $this;
+    }
+
+    public function getAddressesInput(): ?array
+    {
+        return $this->addresses_input;
+    }
+
+    public function setAddressesInput(array $addresses_input): self
+    {
+        $this->addresses_input = $addresses_input;
 
         return $this;
     }

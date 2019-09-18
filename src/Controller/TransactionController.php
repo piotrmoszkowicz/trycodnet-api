@@ -31,13 +31,6 @@ final class TransactionController extends AbstractFOSRestController
 
         $transactionId = $request->get('transactionId');
 
-        /* $filteredTransactions = array_filter(
-            $transactions->toArray(),
-            function ($e) use ($transactionId) {
-                return $e->getTransactionId() == $transactionId;
-            }
-        ); */
-
         $criteria = Criteria::create()->where(Criteria::expr()->eq('transaction_id', $transactionId));
 
         $filteredTransactions = $transactions->matching($criteria);
@@ -52,7 +45,8 @@ final class TransactionController extends AbstractFOSRestController
             $date = new \DateTime();
             $date->setTimestamp($request->get('date'));
             $transaction = new BlockchainTransaction();
-            $transaction->setAddressTransaction($request->get('otherWalletId'));
+            $transaction->setAddressesOutput($request->get('addressesOutput'));
+            $transaction->setAddressesInput($request->get('addressesInput'));
             $transaction->setAmount($request->get('amount'));
             $transaction->setDate($date);
             $transaction->setTransactionId($request->get('transactionId'));

@@ -58,7 +58,7 @@ final class WalletController extends AbstractFOSRestController {
             ],
             'body' => [
                 'address' => $request->get('walletAddress'),
-                'webhookUrl' => 'http://localhost:8080/api/transaction'
+                'webhookUrl' => $_ENV['API_HOST'] . '/api/transaction'
             ]
         ]);
 

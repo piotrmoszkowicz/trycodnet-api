@@ -22,7 +22,7 @@ class BlockchainTransaction
     private $amount;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     private $transaction_id;
 
@@ -74,12 +74,12 @@ class BlockchainTransaction
         return $this;
     }
 
-    public function getTransactionId(): ?int
+    public function getTransactionId(): ?string
     {
         return $this->transaction_id;
     }
 
-    public function setTransactionId(int $transaction_id): self
+    public function setTransactionId(string $transaction_id): self
     {
         $this->transaction_id = $transaction_id;
 

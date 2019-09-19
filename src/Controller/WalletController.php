@@ -52,9 +52,9 @@ final class WalletController extends AbstractFOSRestController {
 
         $client = HttpClient::create();
 
-        $response = $client->request('POST', 'http://localhost:3000/wallets', [
+        $response = $client->request('POST', $_ENV['BLOCKCHAIN_HOST'] . '/wallets', [
             'query' => [
-                'apiKey' => 'test'
+                'apiKey' => $_ENV['API_KEY']
             ],
             'body' => [
                 'address' => $request->get('walletAddress'),
